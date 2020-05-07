@@ -1,4 +1,4 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, session, redirect, render_template
 from datetime import datetime, timedelta
 import bcrypt
 import jwt
@@ -7,72 +7,79 @@ from functools import wraps
 bp = Blueprint('auth', __name__, url_prefix='/api')
 
 
-@bp.route('/login', methods=('POST',))
+@bp.route('/login', methods=('POST','GET'))
 def login():
     try:
 
-        if request.method == 'OPTIONS':
-            return jsonify({}), 204
-        print(request.authorization)
-        client = mongo.Database()
-        user_col = client.user_col
-        auth = request.authorization
+        if request.method == 'POST':
+            client = mongo.Database()
+            user_col = client.user_col
+            auth = request.form
 
 
-        if not auth:
-            context = {
-                "status": False,
-                "res": 1,
-                "message": "Authorization Required",
-            }
+            if not auth:
+                context = {
+                    "status": False,
+                    "res": 1,
+                    "message": "Authorization Required",
+                }
 
-            return jsonify(context), 401
+                return jsonify(context), 401
 
-        if not auth.username:
-            context = {
-                "status": False,
-                "res": 1,
-                "message": "Username missing",
-            }
-            return jsonify(context), 401
+            if not auth.get('username'):
+                context = {
+                    "status": False,
+                    "res": 1,
+                    "message": "Username missing",
+                }
+                return jsonify(context), 401
 
-        if not auth.password:
-            context = {
-                "status": False,
-                "res": 1,
-                "message": "Password missing",
-            }
+            if not auth.get('password'):
+                context = {
+                    "status": False,
+                    "res": 1,
+                    "message": "Password missing",
+                }
 
-            return jsonify(context), 401
-        user = user_col.find_one({"username": auth.username})
+                return jsonify(context), 401
 
-
-        if not user:
-            context = {"status": False, "res": 1, "message": "User not exists"}
-            return jsonify(context), 401
-
-        hashed_password = user.get("hash", "")
-
-        is_authenticated = bcrypt.checkpw(auth.password.encode('utf8'),
-                                          hashed_password.encode('utf-8'))
-
-        if not is_authenticated:
-            context = {"status": False, "res": 1, "message": "Wrong password"}
-            return jsonify(context), 401
+            user = user_col.find_one({"username": auth.get('username')})
 
 
-        user['exp'] = datetime.utcnow() + timedelta(days=1)
+            if not user:
+                context = {"status": False, "res": 1, "message": "User not exists"}
+                return jsonify(context), 401
 
-        del user['hash']
-        del user['_id']
+            hashed_password = user.get("hash", "")
 
-        token = jwt.encode(
-            user, 'skuDnaQu7oC01dy').decode('utf-8')
+            is_authenticated = bcrypt.checkpw(auth.get('password').encode('utf8'),
+                                              hashed_password.encode('utf-8'))
 
-        print(token)
+            if not is_authenticated:
+                context = {"status": False, "res": 1, "message": "Wrong password"}
+                return jsonify(context), 401
 
-        return jsonify(data=user,
-                       access_token=token), 200
+
+            user['exp'] = datetime.utcnow() + timedelta(days=1)
+
+            del user['hash']
+            del user['_id']
+
+            token = jwt.encode(
+                user, 'skuDnaQu7oC01dy').decode('utf-8')
+
+            print(token)
+
+            session['username'] = auth.get('username')
+            session['access_token'] = token
+
+            # return jsonify(data=user,
+            #                access_token=token), 200
+            return redirect('/')
+
+        if 'username' in session:
+                return redirect('/')
+        return render_template('login.html')
     except Exception as e:
         print(e)
         context = {
@@ -81,9 +88,19 @@ def login():
             "message": "Something went wrong",
             "result": []
         }
-        return jsonify(context), 500
+        return "500"
 
 
+
+@bp.route('/logout', methods=['GET'])
+def logout():
+
+    if 'username' in session:
+        del session['username']
+        del session['access_token']
+        return render_template('logout.html')
+
+    return redirect('api/login')
 
 
 
@@ -92,7 +109,8 @@ def token_required(f):
     def decorated(*args, **kwargs):
 
         try:
-            token = request.headers.get('Authorization').split()[-1]
+            token = session['access_token']
+            print('access_token', token)
         except Exception as e:
             print(e)
             context = {
@@ -101,7 +119,9 @@ def token_required(f):
                 "message": "Token missing",
             }
 
-            return jsonify(context), 403
+            # return jsonify(context), 403
+            print('111111111')
+            return redirect('api/login')
 
         try:
             jwt.decode(
@@ -114,18 +134,19 @@ def token_required(f):
                 "message": "Token Expired",
             }
 
-            return jsonify(context), 403
+            # return jsonify(context), 403
+            print(2222222222222)
+            return redirect('api/login')
 
         except jwt.exceptions.DecodeError:
-            # print(e)
+            print(token)
             context = {
                 "status": False,
                 "res": 1,
                 "message": "Invalid Token",
             }
-
-            return jsonify(context), 403
-
+            print(3)
+            return redirect('api/login')
         return f(*args, **kwargs)
 
     return decorated
@@ -136,7 +157,7 @@ def is_admin(f):
     def decorated(*args, **kwargs):
 
         try:
-            token = request.headers.get('Authorization').split()[-1]
+            token = session['access_token']
         except Exception as e:
             print(e)
             context = {
@@ -188,7 +209,7 @@ def is_admin(f):
 def decode_token(token=None):
 
     if not token:
-        token = request.headers.get('Authorization').split()[-1]
+        token = session['access_token']
     try:
         data = jwt.decode(
             token, 'skuDnaQu7oC01dy', verify=True)
