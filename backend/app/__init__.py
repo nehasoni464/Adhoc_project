@@ -10,8 +10,10 @@ def create_app():
 	# input()
 	CORS(app)
 	from apis.authentication import auth
+	from apis.dockerapp import pydocker
 	from apis.authentication.auth import token_required
 	app.register_blueprint(auth.bp)
+	app.register_blueprint(pydocker.bp)
 
 	
 	@app.route('/')

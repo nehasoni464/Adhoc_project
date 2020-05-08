@@ -9,6 +9,7 @@ class Database():
             g.db = MongoClient('mongodb+srv://kunal:adhoc123@cluster0-0e7nv.mongodb.net')
         self.db = g.db.get_database('adhoc')
         self.user_col = self.db.get_collection('users')
+        self.dockerhost = self.db.get_collection('dockerhost')
 
     def close_db(self):
         db = g.pop('db', None)
