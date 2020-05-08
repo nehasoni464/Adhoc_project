@@ -121,7 +121,7 @@ def token_required(f):
 
             # return jsonify(context), 403
             print('111111111')
-            return redirect('api/login')
+            return redirect('/api/login')
 
         try:
             jwt.decode(
@@ -136,7 +136,7 @@ def token_required(f):
 
             # return jsonify(context), 403
             print(2222222222222)
-            return redirect('api/login')
+            return redirect('/api/login')
 
         except jwt.exceptions.DecodeError:
             print(token)
@@ -146,7 +146,7 @@ def token_required(f):
                 "message": "Invalid Token",
             }
             print(3)
-            return redirect('api/login')
+            return redirect('/api/login')
         return f(*args, **kwargs)
 
     return decorated
