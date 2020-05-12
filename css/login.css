@@ -1,0 +1,142 @@
+.flex-container{
+	display: flex;
+	direction: row;
+	align-self: center;
+	justify-content: space-evenly;
+}
+.form_heading{
+	margin-left: 25%;
+	margin-top: 20%;
+  }
+.plaintxt , .bold_heading{
+	color: #29344f;
+	text-align: center;
+	font-family: Lato;
+	font-style: normal;
+	padding-top: 30px;
+	font-weight: 900;
+}
+.bold_heading{
+	font-size: 50px;
+	padding-bottom: 60px;
+}
+.plaintxt{
+	font-size: 30px;
+}
+.image_info{
+	min-width: 759px;
+	min-height: 769px;
+	margin-right: -11.75em;
+	margin-top: -1.5em;
+	object-fit: cover;
+}
+.box_design{
+	color:  #29344f;
+	background-color: white;
+	font-family: Lato;
+	font-weight: bold;
+	justify-self: center;
+	align-items: center;
+	box-sizing: content-box;
+	border: 0px;
+	width: 300px;
+	padding: 15px 90px 15px 1px;
+	box-shadow: 0px 2px 0px #eae9ee,-2px 2px 2px #eae9ee, 2px 2px 2px #eae9ee;
+	border-radius: 5px;
+}
+.divider{
+	justify-content: center;
+	font-family: Lato;
+	font-size: 13px;
+	color: #B9BBC7;
+	margin-top: 40px;
+    overflow: hidden;
+    text-align: center;
+ }
+.divider > span{
+    position: relative;
+    display: inline-block;
+}
+.divider > span:before, .divider > span:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    border-bottom: 2px solid #B9BBC7;
+    width: 114px;
+    margin: 0 10px;
+}
+.divider > span:before{
+    right: 100%;
+}
+.divider > span:after{
+    left: 100%;
+}
+.label_design{
+	color: #121418;
+	font-family: Lato;
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 4em;
+}
+.input_design{
+	width: 90%;
+	padding: 13px 20px;
+	margin-top: -1em;
+	border: 1px solid #B9BBC7;
+	border-radius: 4px;
+}
+.row{
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 1em;
+	justify-content: space-between;
+}
+.check, .rstpass{
+	font-family: Lato;
+	font-weight: 400;
+}
+.check{
+	margin-left: -1%;
+	text-align: left;
+}
+.rstpass{
+	text-decoration: none;
+	text-align: right;
+}
+.login_btn{
+	color: white;
+	margin-top: 8%;
+	width: 100%;
+	background-color: #5456fe;
+	padding: 10px 50px;
+	border: 1px solid #5456fe;
+	border-radius: 4px;
+}
+
+.fulldivider{
+	justify-content: center;
+	color: #B9BBC7;
+	margin-top: 25px;
+    overflow: visible;
+    text-align: center;
+ }
+.fulldivider > span{
+    position: relative;
+    display: inline-block;
+}
+.fulldivider > span:before, .fulldivider > span:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    border-bottom: 2px solid #B9BBC7;
+	width: 390px; /* half of limiter */
+	margin-left: -195px;
+}
+.didnotacc{
+	margin-left: 23%;
+	line-height: 5;
+	font-family: Lato;
+	font-weight: 400;
+	font-size: 14px;
+	color: #B9BBC7;
+}
