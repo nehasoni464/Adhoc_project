@@ -16,8 +16,11 @@
 	padding-top: 30px;
 	font-weight: 900;
 }
+#heading{
+	margin-top: 60px;
+}
 .bold_heading{
-	font-size: 50px;
+	font-size: 40px;
 	padding-bottom: 60px;
 }
 .plaintxt{
@@ -139,4 +142,30 @@
 	font-weight: 400;
 	font-size: 14px;
 	color: #B9BBC7;
+}
+.right_block{
+	flex: 0 0 42%;
+	margin-right: -16.8%;
+	margin-top: -1%;
+	margin-bottom: -6.3%;
+	background-color: #ebeffb;
+}
+.features_pos{
+	font-family: lato;
+	position: relative;
+	padding-top: 15em;
+}
+.fheading{
+	padding-left: 6.4em;
+	font-weight: 400;
+	font-size: 27px;
+}
+.features{
+	padding-left: 11em;
+	font-size: 15px;
+	line-height: 2.5em;
+}
+#shift_right{
+	padding-left: 11em;
+	margin-top: -0.4em;
 }
